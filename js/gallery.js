@@ -15,8 +15,6 @@
 // Закрытие модального окна по нажатию клавиши ESC
 // Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо"
 
-// time 53-00
-
 import galleryItems from './gallery-items.js';
 
 const refs = {
@@ -27,8 +25,12 @@ const refs = {
   overlay: document.querySelector('.lightbox__overlay'),
 };
 
+let indexCurrent;
+
 // gallery rendering
-const gallery = galleryItems.map(galleryItem => createGalleryItem(galleryItem));
+const gallery = galleryItems.map((galleryItem, index) =>
+  createGalleryItem(galleryItem, index),
+);
 refs.galleryList.append(...gallery);
 
 // delegation and open modal window
@@ -36,6 +38,7 @@ refs.galleryList.addEventListener('click', event => {
   event.preventDefault();
   if (event.target.nodeName === 'IMG') {
     const urlCurrent = event.target.dataset.source;
+    indexCurrent = Number(event.target.dataset.index);
     refs.modalImage.src = urlCurrent;
     openModalHandler();
   }
@@ -45,11 +48,11 @@ refs.galleryList.addEventListener('click', event => {
 refs.closeBtn.addEventListener('click', closeModalHandler);
 
 // close modal by overlay
-refs.overlay.addEventListener('click', closeModalByOverlay)
+refs.overlay.addEventListener('click', closeModalByOverlay);
 
 // functions:
 
-function createGalleryItem(item) {
+function createGalleryItem(item, index) {
   const galleryItemRef = document.createElement('li');
   galleryItemRef.classList.add('gallery__item');
 
@@ -61,6 +64,7 @@ function createGalleryItem(item) {
   galleryImageRef.classList.add('gallery__image');
   galleryImageRef.src = item.preview;
   galleryImageRef.dataset.source = item.original;
+  galleryImageRef.dataset.index = index;
   galleryImageRef.alt = item.description;
 
   galleryLinkRef.append(galleryImageRef);
@@ -71,13 +75,13 @@ function createGalleryItem(item) {
 
 function openModalHandler() {
   window.addEventListener('keydown', pressedEscapeHandler);
-  window.addEventListener('keydown', showKey); //DEL
+  window.addEventListener('keydown', arrowSlider);
   refs.modal.classList.add('is-open');
 }
 
 function closeModalHandler() {
   window.removeEventListener('keydown', pressedEscapeHandler);
-  window.removeEventListener('keydown', showKey); //DEL
+  window.removeEventListener('keydown', arrowSlider);
   refs.modal.classList.remove('is-open');
   refs.modalImage.src = '';
 }
@@ -88,15 +92,21 @@ function pressedEscapeHandler(event) {
   }
 }
 
-function closeModalByOverlay (event) {
-    closeModalHandler();
+function closeModalByOverlay(event) {
+  closeModalHandler();
 }
 
-//
-function showKey (event) {
-    console.log(event.code);
+function arrowSlider(event) {
+  if (event.code === 'ArrowLeft' && indexCurrent > 0) {
+    indexCurrent -= 1;
+    changeImage(indexCurrent);
+  }
+  if (event.code === 'ArrowRight' && indexCurrent < galleryItems.length - 1) {
+    indexCurrent += 1;
+    changeImage(indexCurrent);
+  }
 }
 
-// ArrowLeft
-// ArrowRight
-console.log(galleryItems.length);
+function changeImage(newImageIndex) {
+  refs.modalImage.src = galleryItems[newImageIndex].original;
+}
