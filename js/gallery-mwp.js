@@ -15,8 +15,6 @@
 // Закрытие модального окна по нажатию клавиши ESC
 // Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо"
 
-// time 53-00
-
 import galleryItems from './gallery-items.js';
 
 const refs = {
@@ -71,13 +69,11 @@ function createGalleryItem(item) {
 
 function openModalHandler() {
   window.addEventListener('keydown', pressedEscapeHandler);
-  window.addEventListener('keydown', showKey); //DEL
   refs.modal.classList.add('is-open');
 }
 
 function closeModalHandler() {
   window.removeEventListener('keydown', pressedEscapeHandler);
-  window.removeEventListener('keydown', showKey); //DEL
   refs.modal.classList.remove('is-open');
   refs.modalImage.src = '';
 }
@@ -91,12 +87,3 @@ function pressedEscapeHandler(event) {
 function closeModalByOverlay (event) {
     closeModalHandler();
 }
-
-//
-function showKey (event) {
-    console.log(event.code);
-}
-
-// ArrowLeft
-// ArrowRight
-console.log(galleryItems.length);
