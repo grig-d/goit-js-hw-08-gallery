@@ -15,10 +15,29 @@
 // Закрытие модального окна по нажатию клавиши ESC
 // Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо"
 
-
-//////////////////////////
 import galleryItems from './gallery-items.js';
-console.table(galleryItems);
 
-///////////
-// рендерить в <ul class="gallery js-gallery"></ul>
+const createGalleryItem = item => {
+  const galleryItemRef = document.createElement('li');
+  galleryItemRef.classList.add('gallery__item');
+
+  const galleryLinkRef = document.createElement('a');
+  galleryLinkRef.classList.add('gallery__link');
+  galleryLinkRef.href = item.original;
+
+  const galleryImageRef = document.createElement('img');
+  galleryImageRef.classList.add('gallery__image');
+  galleryImageRef.src = item.preview;
+  galleryImageRef.dataset.source = item.original;
+  galleryImageRef.alt = item.description;
+
+  galleryLinkRef.append(galleryImageRef);
+  galleryItemRef.append(galleryLinkRef);
+
+  return galleryItemRef;
+};
+
+const gallery = galleryItems.map(galleryItem => createGalleryItem(galleryItem));
+const galleryListRef = document.querySelector('.js-gallery');
+galleryListRef.append(...gallery);
+
