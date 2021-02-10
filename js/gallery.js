@@ -63,10 +63,18 @@ refs.closeBtn.addEventListener('click', closeModalHandler);
 
 // functions
 function openModalHandler() {
+  window.addEventListener('keydown', pressedEscapeHandler);
   refs.modal.classList.add('is-open');
 }
 
 function closeModalHandler() {
+  window.removeEventListener('keydown', pressedEscapeHandler);
   refs.modal.classList.remove('is-open');
   refs.modalImage.src = '';
+}
+
+function pressedEscapeHandler(event) {
+  if (event.code === 'Escape') {
+      closeModalHandler();
+  }
 }
