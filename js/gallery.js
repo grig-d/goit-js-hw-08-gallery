@@ -20,3 +20,5 @@
 import galleryItems from './gallery-items.js';
 console.table(galleryItems);
 
+///////////
+// рендерить в <ul class="gallery js-gallery"></ul>
