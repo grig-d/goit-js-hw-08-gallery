@@ -22,10 +22,32 @@ const refs = {
   modal: document.querySelector('.js-lightbox'),
   modalImage: document.querySelector('.lightbox__image'),
   closeBtn: document.querySelector('button[data-action="close-lightbox"]'),
+  overlay: document.querySelector('.lightbox__overlay'),
 };
 
 // gallery rendering
-const createGalleryItem = item => {
+const gallery = galleryItems.map(galleryItem => createGalleryItem(galleryItem));
+refs.galleryList.append(...gallery);
+
+// delegation and open modal window
+refs.galleryList.addEventListener('click', event => {
+  event.preventDefault();
+  if (event.target.nodeName === 'IMG') {
+    const urlCurrent = event.target.dataset.source;
+    refs.modalImage.src = urlCurrent;
+    openModalHandler();
+  }
+});
+
+// close modal
+refs.closeBtn.addEventListener('click', closeModalHandler);
+
+// close modal by overlay
+refs.overlay.addEventListener('click', closeModalByOverlay)
+
+// functions:
+
+function createGalleryItem(item) {
   const galleryItemRef = document.createElement('li');
   galleryItemRef.classList.add('gallery__item');
 
@@ -43,25 +65,8 @@ const createGalleryItem = item => {
   galleryItemRef.append(galleryLinkRef);
 
   return galleryItemRef;
-};
+}
 
-const gallery = galleryItems.map(galleryItem => createGalleryItem(galleryItem));
-refs.galleryList.append(...gallery);
-
-// delegation and open modal window
-refs.galleryList.addEventListener('click', event => {
-  event.preventDefault();
-  if (event.target.nodeName === 'IMG') {
-    const urlCurrent = event.target.dataset.source;
-    refs.modalImage.src = urlCurrent;
-    openModalHandler();
-  }
-});
-
-// close modal
-refs.closeBtn.addEventListener('click', closeModalHandler);
-
-// functions
 function openModalHandler() {
   window.addEventListener('keydown', pressedEscapeHandler);
   refs.modal.classList.add('is-open');
@@ -75,6 +80,10 @@ function closeModalHandler() {
 
 function pressedEscapeHandler(event) {
   if (event.code === 'Escape') {
-      closeModalHandler();
+    closeModalHandler();
   }
+}
+
+function closeModalByOverlay (event) {
+    closeModalHandler();
 }
