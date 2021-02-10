@@ -17,6 +17,14 @@
 
 import galleryItems from './gallery-items.js';
 
+const refs = {
+  galleryList: document.querySelector('.js-gallery'),
+  modal: document.querySelector('.js-lightbox'),
+  modalImage: document.querySelector('.lightbox__image'),
+  closeBtn: document.querySelector('button[data-action="close-lightbox"]'),
+};
+
+// gallery rendering
 const createGalleryItem = item => {
   const galleryItemRef = document.createElement('li');
   galleryItemRef.classList.add('gallery__item');
@@ -38,6 +46,27 @@ const createGalleryItem = item => {
 };
 
 const gallery = galleryItems.map(galleryItem => createGalleryItem(galleryItem));
-const galleryListRef = document.querySelector('.js-gallery');
-galleryListRef.append(...gallery);
+refs.galleryList.append(...gallery);
 
+// delegation and open modal window
+refs.galleryList.addEventListener('click', event => {
+  event.preventDefault();
+  if (event.target.nodeName === 'IMG') {
+    const urlCurrent = event.target.dataset.source;
+    refs.modalImage.src = urlCurrent;
+    openModalHandler();
+  }
+});
+
+// close modal
+refs.closeBtn.addEventListener('click', closeModalHandler);
+
+// functions
+function openModalHandler() {
+  refs.modal.classList.add('is-open');
+}
+
+function closeModalHandler() {
+  refs.modal.classList.remove('is-open');
+  refs.modalImage.src = '';
+}
