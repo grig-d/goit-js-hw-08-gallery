@@ -34,15 +34,7 @@ const gallery = galleryItems.map((galleryItem, index) =>
 refs.galleryList.append(...gallery);
 
 // delegation and open modal window
-refs.galleryList.addEventListener('click', event => {
-  event.preventDefault();
-  if (event.target.nodeName === 'IMG') {
-    const urlCurrent = event.target.dataset.source;
-    indexCurrent = Number(event.target.dataset.index);
-    refs.modalImage.src = urlCurrent;
-    openModalHandler();
-  }
-});
+refs.galleryList.addEventListener('click', galleryClick);
 
 // close modal
 refs.closeBtn.addEventListener('click', closeModalHandler);
@@ -71,6 +63,16 @@ function createGalleryItem(item, index) {
   galleryItemRef.append(galleryLinkRef);
 
   return galleryItemRef;
+}
+
+function galleryClick(event) {
+  event.preventDefault();
+  if (event.target.nodeName === 'IMG') {
+    const urlCurrent = event.target.dataset.source;
+    indexCurrent = Number(event.target.dataset.index);
+    refs.modalImage.src = urlCurrent;
+    openModalHandler();
+  }
 }
 
 function openModalHandler() {
